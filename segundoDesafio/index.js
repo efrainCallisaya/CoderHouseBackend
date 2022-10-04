@@ -1,5 +1,10 @@
 import fs from 'fs';
-class Desafio {
+
+import express from "express";
+const app = express();
+const PORT = 8080;
+
+class Contenedor {
   name = "";
   constructor(name) {
     this.name = `./${name}.txt`;
@@ -14,6 +19,7 @@ class Desafio {
       return [];
     }
   }
+
   async save(data) {
     try {
       const items = await this.getAll();
@@ -30,6 +36,7 @@ class Desafio {
       console.log(error);
     }
   }
+
   async getById(id) {
     try {
       const items = await this.getAll();
@@ -48,6 +55,7 @@ class Desafio {
     } catch (err) {
         console.log(err);
     }
+    
   }
 
 
@@ -60,12 +68,32 @@ class Desafio {
   }
 }
 
-const documento = new Desafio("productos");
-documento.getAll().then(console.log);
+const documento = new Contenedor("productos");
 documento.save({
   title: "Calculadora",
   price: 234.56,
   thumbnail:
     "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
+},
+{
+  title: "Calculadora",
+  price: 234.56,
+  thumbnail:
+    "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
+},
+{
+  title: "Calculadora",
+  price: 234.56,
+  thumbnail:
+    "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
+}
+);
+app.get('/productos',(req,res)=>{
+  let data = documento.getAll()
+  console.log(data)
+})
+const server = app.listen(PORT, () => {
+  console.log(`Servidor http escuchando en el puerto ${server.address().port}`);
 });
-//documento.getById(1).then(console.log);
+
+export  {Contenedor};
