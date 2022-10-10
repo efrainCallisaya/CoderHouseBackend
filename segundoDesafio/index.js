@@ -64,10 +64,18 @@ class Contenedor {
       console.log("No se encuentra lo solicitado");
     }
   }
+    async  getRandom() {  try {    
+
+    const elements = await this.getAll();
+    
+      const foundElement = elements[Math.floor(Math.random() * elements.length)]
+    
+     return foundElement;  } catch (error) {   console.log(error);  } }
 
   deleteAll() {
     fs.writeFileSync(this.nombre, JSON.stringify([]));
   }
+  
 }
 
 const documento = new Contenedor("productos");
@@ -83,26 +91,6 @@ app.get("/productos",async (req,res)=>{
 const server = app.listen(PORT, () => {
   console.log(`Servidor http escuchando en el puerto ${server.address().port}`);
 });
-app.get('/productoRandom',async (req,res)=>{
-  //posible solucion 1
-  /*
-  documento.getAll().then((data)=>{
-    let random = randomFunction(data.length)
-    res.send(data[random])
-  })*/
-  //posible solucion 2
-  
-    await documento.getAll()
-    .then( lista=>
-       JSON.parse(lista) 
-    )
-    .then( listaParse =>
-        listaParse[randomFunction(listaParse.length)]
-    )
-    .then( itemLista=>
-        res.json(itemLista) 
-    )
-
-  
-})
+app.get('/productoRandom', async (req, res) => {
+  res.send(await documento.getRandom())})
 export  {Contenedor};
